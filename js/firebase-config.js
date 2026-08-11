@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
+// config from the Firebase console (Project settings > your web app)
 const firebaseConfig = {
   apiKey: "AIzaSyDZ0S5cjgQbD295dpWHoulEEOtZmDHi8cc",
   authDomain: "expense-tracker-ad54d.firebaseapp.com",
@@ -12,5 +13,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// other files import these instead of setting up their own connection
 export const auth = getAuth(app);
 export const db = getFirestore(app);
