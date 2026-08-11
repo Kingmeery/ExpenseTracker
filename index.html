@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ledger — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">Ledger</div>
+    <div class="topbar-right">
+      <span id="user-email"></span>
+      <button id="sign-out-btn">Sign out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="layout">
+
+      <section class="card">
+        <h2>Add an expense</h2>
+        <form id="expense-form">
+          <label>
+            Amount (£)
+            <input type="number" id="amount" step="0.01" min="0" required />
+          </label>
+
+          <label>
+            Category
+            <select id="category" required>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Subscriptions">Subscriptions</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            Date
+            <input type="date" id="date" required />
+          </label>
+
+          <label>
+            Note (optional)
+            <input type="text" id="note" placeholder="e.g. coffee with mates" />
+          </label>
+
+          <button type="submit">Add expense</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Recent expenses</h2>
+        <p id="empty-state">No expenses yet — add your first one.</p>
+        <ul id="expense-list"></ul>
+      </section>
+
+    </div>
+  </main>
+
+</body>
+</html>

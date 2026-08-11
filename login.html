@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ledger — Sign in</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body"></body>
+        <div class="auth-card">
+        <h1 id="auth-title">Welcome back</h1>
+
+        <form id="auth-form">
+            <label>
+            Email
+            <input type="email" id="email" required />
+            </label>
+
+            <label>
+            Password
+            <input type="password" id="password" minlength="6" required />
+            </label>
+
+            <p id="auth-error"></p>
+
+            <button type="submit" id="auth-submit">Sign in</button>
+        </form>
+
+        <button id="toggle-mode" type="button">New here? Create an account</button>
+</div>
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+:root {
+  --paper: #eef1f4;
+  --surface: #f8fafb;
+  --ink: #232830;
+  --muted: #6b7887;
+  --primary: #3b5166;
+  --accent: #5b8291;
+  --danger: #b0413f;
+  --border: #d7dde3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---- Login page only ---- */
+
+.auth-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0 0 24px;
+}
+
+form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+input {
+  font-size: 15px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+}
+
+#auth-submit {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+#toggle-mode {
+  background: none;
+  color: var(--primary);
+  text-decoration: underline;
+  margin-top: 14px;
+}
+
+#auth-error {
+  color: var(--danger);
+  font-size: 13px;
+  min-height: 18px;
+  margin: 8px 0;
+}
+
+/* ---- Dashboard page only ---- */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#sign-out-btn {
+  width: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.card h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  color: var(--primary);
+}
