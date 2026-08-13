@@ -3,6 +3,8 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/f
 import {
   collection,
   addDoc,
+  deleteDoc,
+  doc,
   query,
   where,
   orderBy,
@@ -50,8 +52,6 @@ onAuthStateChanged(auth, (user) => {
     orderBy("date", "desc")
   );
 
-  // onSnapshot keeps listening - the list updates live whenever
-  // an expense is added or removed, no manual refresh needed
   onSnapshot(userExpensesQuery, (snapshot) => {
     const expenses = snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
@@ -67,7 +67,20 @@ function renderExpenses(expenses) {
 
   for (const expense of expenses) {
     const li = document.createElement("li");
-    li.textContent = `${expense.date} - ${expense.category} - £${expense.amount.toFixed(2)} - ${expense.note}`;
+
+    const text = document.createElement("span");
+    text.textContent = `${expense.date} - ${expense.category} - £${expense.amount.toFixed(2)} - ${expense.note}`;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "delete";
+    deleteBtn.addEventListener("click", () => handleDelete(expense.id));
+
+    li.appendChild(text);
+    li.appendChild(deleteBtn);
     expenseListEl.appendChild(li);
   }
+}
+
+async function handleDelete(expenseId) {
+  await deleteDoc(doc(db, "expenses", expenseId));
 }
