@@ -19,6 +19,7 @@ const dateInput = document.getElementById("date");
 const noteInput = document.getElementById("note");
 const expenseListEl = document.getElementById("expense-list");
 const emptyStateEl = document.getElementById("empty-state");
+const totalMonthEl = document.getElementById("total-month");
 
 // adding a new expense
 if (expenseForm) {
@@ -58,6 +59,7 @@ onAuthStateChanged(auth, (user) => {
       ...docSnap.data()
     }));
     renderExpenses(expenses);
+    renderMonthTotal(expenses);
   });
 });
 
@@ -79,6 +81,23 @@ function renderExpenses(expenses) {
     li.appendChild(deleteBtn);
     expenseListEl.appendChild(li);
   }
+}
+
+function renderMonthTotal(expenses) {
+  if (!totalMonthEl) return;
+
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+
+  const total = expenses
+    .filter((expense) => {
+      const expenseDate = new Date(expense.date);
+      return expenseDate.getMonth() === thisMonth && expenseDate.getFullYear() === thisYear;
+    })
+    .reduce((sum, expense) => sum + expense.amount, 0);
+
+  totalMonthEl.textContent = `£${total.toFixed(2)}`;
 }
 
 async function handleDelete(expenseId) {
