@@ -26,19 +26,30 @@ const cancelEditBtn = document.getElementById("cancel-edit-btn");
 const currentMonthLabelEl = document.getElementById("current-month-label");
 const prevMonthBtn = document.getElementById("prev-month-btn");
 const nextMonthBtn = document.getElementById("next-month-btn");
-const monthPickerInput = document.getElementById("month-picker");
+const monthPickerBtn = document.getElementById("month-picker-btn");
+const monthPickerPanel = document.getElementById("month-picker-panel");
+const pickerPrevYearBtn = document.getElementById("picker-prev-year");
+const pickerNextYearBtn = document.getElementById("picker-next-year");
+const pickerYearLabel = document.getElementById("picker-year-label");
+const pickerMonthGrid = document.getElementById("picker-month-grid");
+const pickerTodayBtn = document.getElementById("picker-today-btn");
 
 let editingExpenseId = null;
 let allExpenses = [];
 
 const today = new Date();
-let viewedMonth = today.getMonth();
-let viewedYear = today.getFullYear();
+const realCurrentMonth = today.getMonth();
+const realCurrentYear = today.getFullYear();
+
+let viewedMonth = realCurrentMonth;
+let viewedYear = realCurrentYear;
+let pickerYear = viewedYear;
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
+const monthAbbr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 if (expenseForm) {
   expenseForm.addEventListener("submit", async (event) => {
@@ -98,13 +109,73 @@ if (nextMonthBtn) {
   });
 }
 
-// the native month picker gives back a value like "2026-08"
-if (monthPickerInput) {
-  monthPickerInput.addEventListener("change", () => {
-    const [year, month] = monthPickerInput.value.split("-").map(Number);
-    viewedYear = year;
-    viewedMonth = month - 1; // JS months are 0-indexed, the picker's aren't
+if (monthPickerBtn) {
+  monthPickerBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    pickerYear = viewedYear;
+    renderPickerPanel();
+    monthPickerPanel.hidden = !monthPickerPanel.hidden;
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!monthPickerPanel.hidden && !monthPickerPanel.contains(event.target) && event.target !== monthPickerBtn) {
+    monthPickerPanel.hidden = true;
+  }
+});
+
+if (pickerPrevYearBtn) {
+  pickerPrevYearBtn.addEventListener("click", () => {
+    pickerYear -= 1;
+    renderPickerPanel();
+  });
+}
+
+if (pickerNextYearBtn) {
+  pickerNextYearBtn.addEventListener("click", () => {
+    pickerYear += 1;
+    renderPickerPanel();
+  });
+}
+
+// jumps straight back to today's real month, from anywhere
+if (pickerTodayBtn) {
+  pickerTodayBtn.addEventListener("click", () => {
+    viewedMonth = realCurrentMonth;
+    viewedYear = realCurrentYear;
+    monthPickerPanel.hidden = true;
     updateView();
+  });
+}
+
+function renderPickerPanel() {
+  pickerYearLabel.textContent = pickerYear;
+  pickerMonthGrid.innerHTML = "";
+
+  monthAbbr.forEach((label, index) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "picker-month-btn";
+    btn.textContent = label;
+
+    const isSelected = index === viewedMonth && pickerYear === viewedYear;
+    const isToday = index === realCurrentMonth && pickerYear === realCurrentYear;
+
+    // selected takes priority visually if both are true at once
+    if (isSelected) {
+      btn.classList.add("is-selected");
+    } else if (isToday) {
+      btn.classList.add("is-today");
+    }
+
+    btn.addEventListener("click", () => {
+      viewedMonth = index;
+      viewedYear = pickerYear;
+      monthPickerPanel.hidden = true;
+      updateView();
+    });
+
+    pickerMonthGrid.appendChild(btn);
   });
 }
 
@@ -148,12 +219,6 @@ onAuthStateChanged(auth, (user) => {
 function updateView() {
   if (currentMonthLabelEl) {
     currentMonthLabelEl.textContent = `${monthNames[viewedMonth]} ${viewedYear}`;
-  }
-
-  // keep the hidden picker in sync too, so opening it starts on the right month
-  if (monthPickerInput) {
-    const monthStr = String(viewedMonth + 1).padStart(2, "0");
-    monthPickerInput.value = `${viewedYear}-${monthStr}`;
   }
 
   const expensesThisMonth = allExpenses.filter((expense) => {

@@ -27,10 +27,24 @@
       <div class="summary-left">
         <div class="month-nav">
           <button type="button" id="prev-month-btn" aria-label="Previous month"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
-          <label class="month-picker-wrap">
-            <span id="current-month-label">August 2026</span>
-            <input type="month" id="month-picker" />
-          </label>
+
+          <div class="month-picker">
+            <button type="button" id="month-picker-btn">
+              <span id="current-month-label">August 2026</span>
+              <i class="ti ti-chevron-down" aria-hidden="true"></i>
+            </button>
+
+            <div class="month-picker-panel" id="month-picker-panel" hidden>
+              <div class="picker-year-row">
+                <button type="button" id="picker-prev-year" aria-label="Previous year"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+                <span id="picker-year-label">2026</span>
+                <button type="button" id="picker-next-year" aria-label="Next year"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+              </div>
+              <div class="picker-month-grid" id="picker-month-grid"></div>
+              <button type="button" id="picker-today-btn" class="picker-today-btn">Jump to this month</button>
+            </div>
+          </div>
+
           <button type="button" id="next-month-btn" aria-label="Next month"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
         </div>
         <p id="total-month" class="summary-total">£0.00</p>
