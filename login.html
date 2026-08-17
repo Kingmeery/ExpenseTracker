@@ -3,30 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <title>Ledger — Sign in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="auth-body"></body>
-        <div class="auth-card">
-        <h1 id="auth-title">Welcome back</h1>
+<body>
+
+  <div class="auth-split">
+
+    <div class="auth-brand">
+      <span class="money-symbol money-1">£</span>
+      <span class="money-symbol money-2">$</span>
+      <span class="money-symbol money-3">€</span>
+      <span class="money-symbol money-4">£</span>
+      <span class="money-symbol money-5">$</span>
+
+      <div class="brand-mark">£</div>
+      <h1>Ledger</h1>
+      <p>Track what you spend, see where it goes, stay on top of your month.</p>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h2 id="auth-title">Welcome back</h2>
+        <p class="auth-subtitle">Sign in to your account</p>
 
         <form id="auth-form">
-            <label>
+          <label>
             Email
             <input type="email" id="email" required />
-            </label>
+          </label>
 
-            <label>
+          <label>
             Password
             <input type="password" id="password" minlength="6" required />
-            </label>
+          </label>
 
-            <p id="auth-error"></p>
+          <p id="auth-error"></p>
 
-            <button type="submit" id="auth-submit">Sign in</button>
+          <button type="submit" id="auth-submit">Sign in</button>
         </form>
 
         <button id="toggle-mode" type="button">New here? Create an account</button>
-</div>
-<script type="module" src="js/auth.js"></script>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/auth.js"></script>
 </body>
 </html>
