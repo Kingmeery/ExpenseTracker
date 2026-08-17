@@ -24,10 +24,8 @@ const totalMonthEl = document.getElementById("total-month");
 const submitBtn = document.getElementById("expense-submit-btn");
 const cancelEditBtn = document.getElementById("cancel-edit-btn");
 
-// if this is set, submitting the form updates that expense instead of creating a new one
 let editingExpenseId = null;
 
-// adding or updating an expense
 if (expenseForm) {
   expenseForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -43,11 +41,9 @@ if (expenseForm) {
     };
 
     if (editingExpenseId) {
-      // updating an existing one - no need to touch uid or createdAt
       await updateDoc(doc(db, "expenses", editingExpenseId), expenseData);
       exitEditMode();
     } else {
-      // brand new expense
       await addDoc(collection(db, "expenses"), {
         ...expenseData,
         uid: user.uid,
@@ -84,7 +80,6 @@ function exitEditMode() {
   cancelEditBtn.style.display = "none";
 }
 
-// watching for and displaying this user's expenses
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
 
@@ -105,29 +100,69 @@ onAuthStateChanged(auth, (user) => {
   });
 });
 
+// turns "Food" into "cat-food", "Subscriptions" into "cat-subscriptions" etc
+// so it matches the CSS classes we defined for each category's colour
+function categoryClass(category) {
+  return `cat-${category.toLowerCase()}`;
+}
+
 function renderExpenses(expenses) {
   expenseListEl.innerHTML = "";
   emptyStateEl.style.display = expenses.length === 0 ? "block" : "none";
 
   for (const expense of expenses) {
     const li = document.createElement("li");
+    li.className = `expense-row ${categoryClass(expense.category)}`;
 
-    const text = document.createElement("span");
-    text.textContent = `${expense.date} - ${expense.category} - £${expense.amount.toFixed(2)} - ${expense.note}`;
+    const main = document.createElement("div");
+    main.className = "expense-main";
+
+    const pill = document.createElement("span");
+    pill.className = `expense-pill ${categoryClass(expense.category)}`;
+    pill.textContent = expense.category;
+
+    const note = document.createElement("span");
+    note.className = "expense-note";
+    note.textContent = expense.note || "";
+
+    main.appendChild(pill);
+    main.appendChild(note);
+
+    const side = document.createElement("div");
+    side.className = "expense-side";
+
+    const date = document.createElement("span");
+    date.className = "expense-date";
+    date.textContent = formatDate(expense.date);
+
+    const amount = document.createElement("span");
+    amount.className = "expense-amount";
+    amount.textContent = `£${expense.amount.toFixed(2)}`;
 
     const editBtn = document.createElement("button");
-    editBtn.textContent = "edit";
+    editBtn.className = "expense-edit";
+    editBtn.innerHTML = '<i class="ti ti-edit" aria-hidden="true"></i>';
     editBtn.addEventListener("click", () => enterEditMode(expense));
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "delete";
+    deleteBtn.className = "expense-delete";
+    deleteBtn.innerHTML = '<i class="ti ti-trash" aria-hidden="true"></i>';
     deleteBtn.addEventListener("click", () => handleDelete(expense.id));
 
-    li.appendChild(text);
-    li.appendChild(editBtn);
-    li.appendChild(deleteBtn);
+    side.appendChild(date);
+    side.appendChild(amount);
+    side.appendChild(editBtn);
+    side.appendChild(deleteBtn);
+
+    li.appendChild(main);
+    li.appendChild(side);
     expenseListEl.appendChild(li);
   }
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
 function renderMonthTotal(expenses) {

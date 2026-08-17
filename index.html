@@ -3,28 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <title>Ledger — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header class="topbar">
-    <div class="brand">Ledger</div>
+    <div class="brand-group">
+      <div class="brand-mark-small">£</div>
+      <div class="brand">Ledger</div>
+    </div>
     <div class="topbar-right">
       <span id="user-email"></span>
       <button id="sign-out-btn">Sign out</button>
     </div>
   </header>
 
-  <div class="summary-strip">
-    <span>This month</span>
-    <span id="total-month">£0.00</span>
-  </div>
-
   <main class="page">
+
+    <div class="summary-card">
+      <div>
+        <p class="summary-label">Total spent this month</p>
+        <p id="total-month" class="summary-total">£0.00</p>
+      </div>
+      <i class="ti ti-report-money summary-icon" aria-hidden="true"></i>
+    </div>
+
     <div class="layout">
 
       <section class="card">
-        <h2>Add an expense</h2>
+        <h2><i class="ti ti-plus card-icon" aria-hidden="true"></i>Add an expense</h2>
         <form id="expense-form">
           <label>
             Amount (£)
@@ -50,7 +60,7 @@
 
           <label>
             Note (optional)
-            <input type="text" id="note" placeholder="e.g. coffee with mates" />
+            <input type="text" id="note" placeholder="e.g. coffee with mates" maxlength="40" />
           </label>
 
           <button type="submit" id="expense-submit-btn">Add expense</button>
@@ -59,13 +69,14 @@
       </section>
 
       <section class="card">
-        <h2>Recent expenses</h2>
+        <h2><i class="ti ti-list card-icon" aria-hidden="true"></i>Recent expenses</h2>
         <p id="empty-state">No expenses yet — add your first one.</p>
         <ul id="expense-list"></ul>
       </section>
 
     </div>
   </main>
+
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/expenses.js"></script>
