@@ -24,8 +24,15 @@
   <main class="page">
 
     <div class="summary-card">
-      <div>
-        <p class="summary-label">Total spent this month</p>
+      <div class="summary-left">
+        <div class="month-nav">
+          <button type="button" id="prev-month-btn" aria-label="Previous month"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+          <label class="month-picker-wrap">
+            <span id="current-month-label">August 2026</span>
+            <input type="month" id="month-picker" />
+          </label>
+          <button type="button" id="next-month-btn" aria-label="Next month"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+        </div>
         <p id="total-month" class="summary-total">£0.00</p>
       </div>
       <i class="ti ti-report-money summary-icon" aria-hidden="true"></i>
@@ -70,7 +77,7 @@
 
       <section class="card">
         <h2><i class="ti ti-list card-icon" aria-hidden="true"></i>Recent expenses</h2>
-        <p id="empty-state">No expenses yet — add your first one.</p>
+        <p id="empty-state">No expenses this month.</p>
         <ul id="expense-list"></ul>
       </section>
 

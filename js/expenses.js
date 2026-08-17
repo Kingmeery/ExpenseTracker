@@ -23,8 +23,22 @@ const emptyStateEl = document.getElementById("empty-state");
 const totalMonthEl = document.getElementById("total-month");
 const submitBtn = document.getElementById("expense-submit-btn");
 const cancelEditBtn = document.getElementById("cancel-edit-btn");
+const currentMonthLabelEl = document.getElementById("current-month-label");
+const prevMonthBtn = document.getElementById("prev-month-btn");
+const nextMonthBtn = document.getElementById("next-month-btn");
+const monthPickerInput = document.getElementById("month-picker");
 
 let editingExpenseId = null;
+let allExpenses = [];
+
+const today = new Date();
+let viewedMonth = today.getMonth();
+let viewedYear = today.getFullYear();
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 if (expenseForm) {
   expenseForm.addEventListener("submit", async (event) => {
@@ -62,6 +76,38 @@ if (cancelEditBtn) {
   });
 }
 
+if (prevMonthBtn) {
+  prevMonthBtn.addEventListener("click", () => {
+    viewedMonth -= 1;
+    if (viewedMonth < 0) {
+      viewedMonth = 11;
+      viewedYear -= 1;
+    }
+    updateView();
+  });
+}
+
+if (nextMonthBtn) {
+  nextMonthBtn.addEventListener("click", () => {
+    viewedMonth += 1;
+    if (viewedMonth > 11) {
+      viewedMonth = 0;
+      viewedYear += 1;
+    }
+    updateView();
+  });
+}
+
+// the native month picker gives back a value like "2026-08"
+if (monthPickerInput) {
+  monthPickerInput.addEventListener("change", () => {
+    const [year, month] = monthPickerInput.value.split("-").map(Number);
+    viewedYear = year;
+    viewedMonth = month - 1; // JS months are 0-indexed, the picker's aren't
+    updateView();
+  });
+}
+
 function enterEditMode(expense) {
   editingExpenseId = expense.id;
 
@@ -91,17 +137,34 @@ onAuthStateChanged(auth, (user) => {
   );
 
   onSnapshot(userExpensesQuery, (snapshot) => {
-    const expenses = snapshot.docs.map((docSnap) => ({
+    allExpenses = snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
       ...docSnap.data()
     }));
-    renderExpenses(expenses);
-    renderMonthTotal(expenses);
+    updateView();
   });
 });
 
-// turns "Food" into "cat-food", "Subscriptions" into "cat-subscriptions" etc
-// so it matches the CSS classes we defined for each category's colour
+function updateView() {
+  if (currentMonthLabelEl) {
+    currentMonthLabelEl.textContent = `${monthNames[viewedMonth]} ${viewedYear}`;
+  }
+
+  // keep the hidden picker in sync too, so opening it starts on the right month
+  if (monthPickerInput) {
+    const monthStr = String(viewedMonth + 1).padStart(2, "0");
+    monthPickerInput.value = `${viewedYear}-${monthStr}`;
+  }
+
+  const expensesThisMonth = allExpenses.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+    return expenseDate.getMonth() === viewedMonth && expenseDate.getFullYear() === viewedYear;
+  });
+
+  renderExpenses(expensesThisMonth);
+  renderMonthTotal(expensesThisMonth);
+}
+
 function categoryClass(category) {
   return `cat-${category.toLowerCase()}`;
 }
@@ -167,18 +230,7 @@ function formatDate(dateString) {
 
 function renderMonthTotal(expenses) {
   if (!totalMonthEl) return;
-
-  const now = new Date();
-  const thisMonth = now.getMonth();
-  const thisYear = now.getFullYear();
-
-  const total = expenses
-    .filter((expense) => {
-      const expenseDate = new Date(expense.date);
-      return expenseDate.getMonth() === thisMonth && expenseDate.getFullYear() === thisYear;
-    })
-    .reduce((sum, expense) => sum + expense.amount, 0);
-
+  const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
   totalMonthEl.textContent = `£${total.toFixed(2)}`;
 }
 

@@ -266,10 +266,54 @@ button {
   margin-bottom: 24px;
 }
 
-.summary-label {
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.month-nav button {
+  width: auto;
+  background: none;
+  border: none;
+  color: #b7c3cd;
+  padding: 2px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.month-nav button:hover {
+  color: var(--paper);
+}
+
+.month-picker-wrap {
+  position: relative;
+  cursor: pointer;
+}
+
+#current-month-label {
   font-size: 13px;
   color: #b7c3cd;
-  margin: 0 0 6px;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.month-picker-wrap:hover #current-month-label {
+  color: var(--paper);
+}
+
+/* the real input sits invisibly on top - clicking the label opens its picker */
+#month-picker {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  padding: 0;
+  border: none;
 }
 
 .summary-total {
