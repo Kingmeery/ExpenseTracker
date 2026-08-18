@@ -201,8 +201,8 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 20px 32px;
-  background: var(--surface);
-  border-bottom: 0.5px solid var(--border);
+  background: var(--primary);
+  border-bottom: none;
 }
 
 .brand-group {
@@ -215,8 +215,8 @@ button {
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: var(--primary);
-  color: var(--paper);
+  background: var(--paper);
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -227,7 +227,7 @@ button {
 .brand {
   font-size: 18px;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--paper);
 }
 
 .topbar-right {
@@ -236,18 +236,23 @@ button {
   gap: 16px;
 }
 
+.topbar-right #user-email {
+  color: #b7c3cd;
+  font-size: 13px;
+}
+
 #sign-out-btn {
   width: auto;
   background: none;
-  border: 0.5px solid var(--border);
+  border: 0.5px solid #56718a;
   border-radius: 6px;
   padding: 8px 14px;
   font-size: 13px;
-  color: var(--ink);
+  color: var(--paper);
 }
 
 #sign-out-btn:hover {
-  background: var(--paper);
+  background: var(--primary-hover);
 }
 
 .page {
@@ -423,22 +428,26 @@ button {
   background: var(--surface);
   border: 0.5px solid var(--border);
   border-radius: 12px;
-  padding: 22px;
+  overflow: hidden;
 }
 
-.card h2 {
-  margin: 0 0 16px;
-  font-size: 16px;
+.card-header {
+  background: var(--primary);
+  color: var(--paper);
+  padding: 14px 20px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--ink);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.card-icon {
-  font-size: 16px;
-  color: var(--accent);
+.card-header i {
+  font-size: 15px;
+}
+
+.card-body {
+  padding: 20px;
 }
 
 #cancel-edit-btn {
@@ -446,6 +455,16 @@ button {
   color: var(--muted);
   border: 0.5px solid var(--border);
   margin-top: 8px;
+}
+
+#expense-submit-btn {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+#expense-submit-btn:hover {
+  background: var(--primary-hover);
 }
 
 /* expense list rows */
@@ -560,8 +579,23 @@ button {
   margin-top: 20px;
 }
 
-.charts-second-heading {
+.chart-subheading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+
+.chart-subheading-second {
   margin-top: 28px;
+}
+
+.chart-subheading-icon {
+  font-size: 15px;
+  color: var(--accent);
 }
 
 .chart-legend {

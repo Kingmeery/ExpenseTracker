@@ -56,58 +56,65 @@
     <div class="layout">
 
       <section class="card">
-        <h2><i class="ti ti-plus card-icon" aria-hidden="true"></i>Add an expense</h2>
-        <form id="expense-form">
-          <label>
-            Amount (£)
-            <input type="number" id="amount" step="0.01" min="0" required />
-          </label>
+        <div class="card-header"><i class="ti ti-plus" aria-hidden="true"></i>Add an expense</div>
+        <div class="card-body">
+          <form id="expense-form">
+            <label>
+              Amount (£)
+              <input type="number" id="amount" step="0.01" min="0" required />
+            </label>
 
-          <label>
-            Category
-            <select id="category" required>
-              <option value="Food">Food</option>
-              <option value="Transport">Transport</option>
-              <option value="Subscriptions">Subscriptions</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Bills">Bills</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
+            <label>
+              Category
+              <select id="category" required>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Subscriptions">Subscriptions</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Bills">Bills</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
 
-          <label>
-            Date
-            <input type="date" id="date" required />
-          </label>
+            <label>
+              Date
+              <input type="date" id="date" required />
+            </label>
 
-          <label>
-            Note (optional)
-            <input type="text" id="note" placeholder="e.g. coffee with mates" maxlength="40" />
-          </label>
+            <label>
+              Note (optional)
+              <input type="text" id="note" placeholder="e.g. coffee with mates" maxlength="40" />
+            </label>
 
-          <button type="submit" id="expense-submit-btn">Add expense</button>
-          <button type="button" id="cancel-edit-btn" style="display: none;">Cancel</button>
-        </form>
+            <button type="submit" id="expense-submit-btn">Add expense</button>
+            <button type="button" id="cancel-edit-btn" style="display: none;">Cancel</button>
+          </form>
+        </div>
       </section>
 
       <section class="card">
-        <h2><i class="ti ti-list card-icon" aria-hidden="true"></i>Recent expenses</h2>
-        <p id="empty-state">No expenses this month.</p>
-        <ul id="expense-list"></ul>
+        <div class="card-header"><i class="ti ti-list" aria-hidden="true"></i>Recent expenses</div>
+        <div class="card-body">
+          <p id="empty-state">No expenses this month.</p>
+          <ul id="expense-list"></ul>
+        </div>
       </section>
 
     </div>
 
     <section class="card charts-card">
-      <h2><i class="ti ti-chart-pie card-icon" aria-hidden="true"></i>Spend by category</h2>
-      <div id="category-legend" class="chart-legend"></div>
-      <div class="chart-wrap">
-        <canvas id="category-chart" role="img" aria-label="Pie chart of spend by category for the selected month"></canvas>
-      </div>
+      <div class="card-header"><i class="ti ti-chart-bar" aria-hidden="true"></i>Insights</div>
+      <div class="card-body">
+        <h3 class="chart-subheading"><i class="ti ti-chart-pie chart-subheading-icon" aria-hidden="true"></i>Spend by category</h3>
+        <div id="category-legend" class="chart-legend"></div>
+        <div class="chart-wrap">
+          <canvas id="category-chart" role="img" aria-label="Pie chart of spend by category for the selected month"></canvas>
+        </div>
 
-      <h2 class="charts-second-heading"><i class="ti ti-chart-line card-icon" aria-hidden="true"></i>Spend over time</h2>
-      <div class="chart-wrap">
-        <canvas id="trend-chart" role="img" aria-label="Line chart of daily spend across the selected month"></canvas>
+        <h3 class="chart-subheading chart-subheading-second"><i class="ti ti-chart-line chart-subheading-icon" aria-hidden="true"></i>Spend over time</h3>
+        <div class="chart-wrap">
+          <canvas id="trend-chart" role="img" aria-label="Line chart of daily spend across the selected month"></canvas>
+        </div>
       </div>
     </section>
 
