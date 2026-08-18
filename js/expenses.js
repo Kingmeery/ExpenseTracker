@@ -33,6 +33,9 @@ const pickerNextYearBtn = document.getElementById("picker-next-year");
 const pickerYearLabel = document.getElementById("picker-year-label");
 const pickerMonthGrid = document.getElementById("picker-month-grid");
 const pickerTodayBtn = document.getElementById("picker-today-btn");
+const categoryLegendEl = document.getElementById("category-legend");
+const categoryChartCanvas = document.getElementById("category-chart");
+const trendChartCanvas = document.getElementById("trend-chart");
 
 let editingExpenseId = null;
 let allExpenses = [];
@@ -50,6 +53,21 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December"
 ];
 const monthAbbr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// same colours as the CSS category classes, so the charts match the list
+const categoryColors = {
+  Food: "#e29a3b",
+  Transport: "#6b9bc7",
+  Subscriptions: "#5aa88f",
+  Shopping: "#9b7fc7",
+  Bills: "#c76b8f",
+  Other: "#9aa5ac"
+};
+
+// chart.js instances - kept here so we can destroy and rebuild them
+// each time the data changes, instead of piling up new charts
+let categoryChart = null;
+let trendChart = null;
 
 if (expenseForm) {
   expenseForm.addEventListener("submit", async (event) => {
@@ -138,7 +156,6 @@ if (pickerNextYearBtn) {
   });
 }
 
-// jumps straight back to today's real month, from anywhere
 if (pickerTodayBtn) {
   pickerTodayBtn.addEventListener("click", () => {
     viewedMonth = realCurrentMonth;
@@ -161,7 +178,6 @@ function renderPickerPanel() {
     const isSelected = index === viewedMonth && pickerYear === viewedYear;
     const isToday = index === realCurrentMonth && pickerYear === realCurrentYear;
 
-    // selected takes priority visually if both are true at once
     if (isSelected) {
       btn.classList.add("is-selected");
     } else if (isToday) {
@@ -228,6 +244,8 @@ function updateView() {
 
   renderExpenses(expensesThisMonth);
   renderMonthTotal(expensesThisMonth);
+  renderCategoryChart(expensesThisMonth);
+  renderTrendChart(expensesThisMonth);
 }
 
 function categoryClass(category) {
@@ -297,6 +315,120 @@ function renderMonthTotal(expenses) {
   if (!totalMonthEl) return;
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
   totalMonthEl.textContent = `£${total.toFixed(2)}`;
+}
+
+// groups this month's expenses by category and totals each one,
+// then draws (or redraws) the pie chart plus a matching text legend
+function renderCategoryChart(expenses) {
+  if (!categoryChartCanvas) return;
+
+  const totalsByCategory = {};
+  for (const expense of expenses) {
+    totalsByCategory[expense.category] = (totalsByCategory[expense.category] || 0) + expense.amount;
+  }
+
+  const labels = Object.keys(totalsByCategory);
+  const values = Object.values(totalsByCategory);
+  const colors = labels.map((label) => categoryColors[label] || "#9aa5ac");
+  const grandTotal = values.reduce((sum, v) => sum + v, 0);
+
+  categoryLegendEl.innerHTML = "";
+  labels.forEach((label, i) => {
+    const percent = grandTotal === 0 ? 0 : Math.round((values[i] / grandTotal) * 100);
+    const item = document.createElement("span");
+    item.className = "chart-legend-item";
+    item.innerHTML = `<span class="chart-legend-swatch" style="background:${colors[i]}"></span>${label} ${percent}%`;
+    categoryLegendEl.appendChild(item);
+  });
+
+  if (categoryChart) {
+    categoryChart.destroy();
+  }
+
+  categoryChart = new Chart(categoryChartCanvas, {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderColor: "#f8fafb",
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.label}: £${context.parsed.toFixed(2)}`
+          }
+        }
+      }
+    }
+  });
+}
+
+// totals expenses per day across the viewed month, so the trend
+// line shows every day even ones with nothing spent (as a £0 gap)
+function renderTrendChart(expenses) {
+  if (!trendChartCanvas) return;
+
+  const daysInMonth = new Date(viewedYear, viewedMonth + 1, 0).getDate();
+  const totalsByDay = new Array(daysInMonth).fill(0);
+
+  for (const expense of expenses) {
+    const day = new Date(expense.date).getDate();
+    totalsByDay[day - 1] += expense.amount;
+  }
+
+  const labels = totalsByDay.map((_, i) => `${i + 1}`);
+
+  if (trendChart) {
+    trendChart.destroy();
+  }
+
+  trendChart = new Chart(trendChartCanvas, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "Daily spend",
+        data: totalsByDay,
+        borderColor: "#3b5166",
+        backgroundColor: "rgba(59,81,102,0.08)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 2,
+        pointBackgroundColor: "#3b5166"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => `£${context.parsed.y.toFixed(2)}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: "#e1e0d9" },
+          ticks: { color: "#9aa5ac", callback: (v) => `£${v}` }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: "#9aa5ac", autoSkip: true, maxTicksLimit: 10 }
+        }
+      }
+    }
+  });
 }
 
 async function handleDelete(expenseId) {

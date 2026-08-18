@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 </head>
 <body>
 
@@ -96,6 +97,20 @@
       </section>
 
     </div>
+
+    <section class="card charts-card">
+      <h2><i class="ti ti-chart-pie card-icon" aria-hidden="true"></i>Spend by category</h2>
+      <div id="category-legend" class="chart-legend"></div>
+      <div class="chart-wrap">
+        <canvas id="category-chart" role="img" aria-label="Pie chart of spend by category for the selected month"></canvas>
+      </div>
+
+      <h2 class="charts-second-heading"><i class="ti ti-chart-line card-icon" aria-hidden="true"></i>Spend over time</h2>
+      <div class="chart-wrap">
+        <canvas id="trend-chart" role="img" aria-label="Line chart of daily spend across the selected month"></canvas>
+      </div>
+    </section>
+
   </main>
 
   <script type="module" src="js/firebase-config.js"></script>
